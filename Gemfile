@@ -5,4 +5,4 @@ source "https://rubygems.org"
 # gem "rails"
 
 gem "rubocop", require: false
-gem "rubocop-metrics", require: false
+gem 'rubocop-performance', require: false
