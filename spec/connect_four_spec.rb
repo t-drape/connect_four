@@ -104,7 +104,8 @@ describe Game do # rubocop:disable Metrics/BlockLength
       it 'prints an appropriate message to the winner' do
         player = 'x'
         winner_message = "Player #{player} wins!\n"
-        expect { winner.end_game(player) }.to output(winner_message).to_stdout
+        winner.winner = 'x'
+        expect { winner.end_game }.to output(winner_message).to_stdout
       end
 
       it 'prints an appropriate message for a tie' do

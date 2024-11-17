@@ -2,7 +2,7 @@
 
 # A class to model the game Connect Four
 class Game
-  attr_accessor :board
+  attr_accessor :board, :winner
 
   def initialize(player_one, player_two)
     @player_one = player_one
@@ -93,9 +93,9 @@ class Game
     win_rows || win_verticals || win_diagonal
   end
 
-  def end_game(winner = @winner)
-    if winner
-      puts "Player #{winner} wins!"
+  def end_game
+    if @winner
+      puts "Player #{@winner} wins!"
     else
       puts 'Nobody wins. This game ended in a tie :('
     end
