@@ -68,6 +68,15 @@ describe Game do
 
         expect(diagonal.win_diagonal).to eql(true)
       end
+
+      it 'returns true if diagonal win on board from top left' do
+        diagonal.board[2][0] = 'x'
+        diagonal.board[3][1] = 'x'
+        diagonal.board[4][2] = 'x'
+        diagonal.board[5][3] = 'x'
+
+        expect(diagonal.win_diagonal).to eql(true)
+      end
     end
   end
 end
