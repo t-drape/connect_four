@@ -92,4 +92,12 @@ class Game
   def win_exists
     win_rows || win_verticals || win_diagonal
   end
+
+  def end_game(winner = @winner)
+    if winner
+      puts "Player #{winner} wins!"
+    else
+      puts 'Nobody wins. This game ended in a tie :('
+    end
+  end
 end

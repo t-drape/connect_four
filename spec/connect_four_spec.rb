@@ -96,4 +96,21 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
     end
   end
+
+  describe '#end_game' do
+    context 'when game is over' do
+      subject(:winner) { described_class.new('t', 'j') }
+
+      it 'prints an appropriate message to the winner' do
+        player = 'x'
+        winner_message = "Player #{player} wins!\n"
+        expect { winner.end_game(player) }.to output(winner_message).to_stdout
+      end
+
+      it 'prints an appropriate message for a tie' do
+        tie_message = "Nobody wins. This game ended in a tie :(\n"
+        expect { winner.end_game }.to output(tie_message).to_stdout
+      end
+    end
+  end
 end
