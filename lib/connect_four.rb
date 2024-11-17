@@ -88,4 +88,8 @@ class Game
     end
     false
   end
+
+  def win_exists
+    win_rows || win_verticals || win_diagonal
+  end
 end
