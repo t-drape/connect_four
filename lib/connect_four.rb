@@ -51,22 +51,36 @@ class Game
                                                         [[3][0], [2][1], [1][2], [0][3]]]
   end
 
-  def wins_rows
+  def win_rows
     @board.each do |row|
       @winning_combinations_horizontal.each do |combo|
         mapped = []
         combo.each do |idx|
           mapped << row[idx]
         end
-        return true if mapped.all?(mapped[0])
+        return true if mapped.all?(mapped[0]) && !mapped[0].nil?
       end
     end
     false
   end
 
+  def win_verticals
+    7.times do |spot_index|
+      win = []
+      @winning_combinations_vertical.each do |combo|
+        combo.each do |vertical_index|
+          win << @board[vertical_index][spot_index]
+        end
+        return true if win.all?(win[0]) && !win[0].nil?
+      end
+    end
+    false
+  end
+
+  def win_diagonal
+    p @winning_combinations_diagonal_from_top_left
+  end
+
   def winner_exists
   end
 end
-
-x = Game.new('t', 'j')
-p x.wins_rows
