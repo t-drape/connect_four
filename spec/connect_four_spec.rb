@@ -114,4 +114,122 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
     end
   end
+
+  describe '#update_board' do
+    context 'when a player selects a valid move' do
+      subject(:game_board) { described_class.new }
+      it 'updates the board to reflect the players move' do
+        original_board = [[nil, nil, nil, nil, nil, nil, nil],
+                          [nil, nil, nil, nil, nil, nil, nil],
+                          [nil, nil, nil, nil, nil, nil, nil],
+                          [nil, nil, nil, nil, nil, nil, nil],
+                          [nil, nil, nil, nil, nil, nil, nil],
+                          [nil, nil, nil, nil, nil, nil, nil]]
+
+        new_board = [[nil, nil, "\u{1F535}", nil, nil, nil, nil],
+                     [nil, nil, nil, nil, nil, nil, nil],
+                     [nil, nil, nil, nil, nil, nil, nil],
+                     [nil, nil, nil, nil, nil, nil, nil],
+                     [nil, nil, nil, nil, nil, nil, nil],
+                     [nil, nil, nil, nil, nil, nil, nil]]
+        move = [0, 2]
+
+        expect { game_board.update_board(move[0], move[1]) }.to change {
+          game_board.board
+        }.from(original_board).to(new_board)
+      end
+    end
+  end
+
+  describe '#player_move' do # rubocop:disable Metrics/BlockLength
+    context 'when a round is initiated, asks current_player for move' do # rubocop:disable Metrics/BlockLength
+      subject(:moves) { described_class.new }
+
+      before do
+        allow(moves).to receive(:gets).and_return('0, 2')
+      end
+
+      it 'prompts user to enter move' do
+        move_message = "Please Select A Move: \n"
+        expect { moves.player_move }.to output(move_message).to_stdout
+      end
+
+      it 'receives input from user' do
+        allow(moves).to receive(:puts)
+        expect(moves).to receive(:gets).once.and_return('0, 2')
+        moves.player_move
+      end
+
+      it 'returns an array from the user input' do
+        allow(moves).to receive(:puts)
+        expect(moves).to receive(:gets).once.and_return('0, 2')
+        expect(moves.player_move).to be_kind_of Array
+      end
+
+      it 'returns all values in integer form' do
+        allow(moves).to receive(:puts)
+        expect(moves).to receive(:gets).once.and_return('0, 2')
+        expect(moves.player_move).to all be_kind_of Integer
+      end
+
+      it 'returns correct value' do
+        allow(moves).to receive(:puts)
+        expect(moves).to receive(:gets).once.and_return('0, 2')
+        expect(moves.player_move).to eql([0, 2])
+      end
+
+      it 'disallows invalid moves' do
+        moves.board = [[nil, nil, "\u{1F535}", nil, nil, nil, nil],
+                       [nil, nil, nil, nil, nil, nil, nil],
+                       [nil, nil, nil, nil, nil, nil, nil],
+                       [nil, nil, nil, nil, nil, nil, nil],
+                       [nil, nil, nil, nil, nil, nil, nil],
+                       [nil, nil, nil, nil, nil, nil, nil]]
+        allow(moves).to receive(:puts)
+        allow(moves).to receive(:gets).twice.and_return('0, 2', '1, 3')
+        expect(moves.player_move).to eql([1, 3])
+      end
+    end
+  end
+
+  describe '#update_game' do
+    context 'when round is over' do
+      subject(:round_over) { described_class.new }
+
+      it 'checks for winner' do
+        allow(round_over).to receive(:win_exists)
+        allow(round_over).to receive(:play_round)
+        expect(round_over).to receive(:win_exists).once
+        round_over.update_game
+      end
+
+      it 'changes player if no winner' do
+        allow(round_over).to receive(:win_exists).and_return(false)
+        allow(round_over).to receive(:play_round)
+        round_over.update_game
+        current_player = round_over.instance_variable_get(:@current_player)
+        player_two = round_over.instance_variable_get(:@player_two)
+        expect(current_player).to eql(player_two)
+      end
+
+      it 'updates winner if winner exists' do
+        allow(round_over).to receive(:win_exists).and_return(true)
+        allow(round_over).to receive(:puts)
+        current_player = round_over.instance_variable_get(:@current_player)
+        expect { round_over.update_game }.to change(round_over, :winner).from(nil).to(current_player)
+      end
+
+      it 'calls end_game fucntion when true' do
+        allow(round_over).to receive(:win_exists).and_return(true)
+        allow(round_over).to receive(:puts)
+        expect(round_over).to receive(:end_game).once
+        round_over.update_game
+      end
+
+      it 'calls play round when false' do
+        expect(round_over).to receive(:play_round).once
+        round_over.update_game
+      end
+    end
+  end
 end

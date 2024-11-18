@@ -4,7 +4,7 @@
 class Game
   attr_accessor :board, :winner
 
-  def initialize(player_one, player_two)
+  def initialize(player_one = "\u{1F535}", player_two = "\u{1F534}")
     @player_one = player_one
     @player_two = player_two
     @current_player = player_one
@@ -98,6 +98,32 @@ class Game
       puts "Player #{@winner} wins!"
     else
       puts 'Nobody wins. This game ended in a tie :('
+    end
+  end
+
+  def update_board(horizontal, vertical)
+    @board[horizontal][vertical] = @current_player
+  end
+
+  def player_move
+    puts 'Please Select A Move: '
+    move = gets.chomp.split(',').map(&:to_i)
+    return move if @board[move[0]][move[1]].nil?
+
+    player_move
+  end
+
+  def play_round
+    puts 'Hello'
+  end
+
+  def update_game
+    if win_exists
+      @winner = @current_player
+      end_game
+    else
+      @current_player = @current_player == @player_one ? @player_two : @player_one
+      play_round
     end
   end
 end
