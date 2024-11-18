@@ -232,4 +232,73 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
     end
   end
+
+  describe '#play_round' do
+    context 'when game is started' do
+      subject(:round) { described_class.new }
+
+      it 'calls player_move once' do
+        allow(round).to receive(:player_move).and_return([0, 3])
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:update_game)
+        expect(round).to receive(:player_move).once
+        round.play_round
+      end
+
+      it 'calls update_board once' do
+        allow(round).to receive(:player_move).and_return([0, 2])
+        allow(round).to receive(:update_game)
+        expect(round).to receive(:update_board).once.with(0, 2)
+        round.play_round
+      end
+
+      it 'calls update_game once' do
+        allow(round).to receive(:player_move).and_return([0, 2])
+        allow(round).to receive(:update_board)
+        allow(round).to receive(:update_game)
+        expect(round).to receive(:update_game).once
+        round.play_round
+      end
+    end
+  end
+
+  describe '#play_game' do
+    context 'when game started' do
+      subject(:game) { described_class.new }
+
+      it 'calls play_round' do
+        allow(game).to receive(:board_full).and_return(false)
+        allow(game).to receive(:play_round)
+        expect(game).to receive(:play_round).once
+        game.play_game
+      end
+
+      # it 'checks if board is full' do
+      #   # expect(game).to receive(:board_full).and_return(true)
+      #   expect(game).to receive(:board_full).once
+      #   game.play_game
+      # end
+
+      it 'calls play_round if winner does not exist and board is not full' do
+        allow(game).to receive(:board_full).and_return(false)
+        game.winner = nil
+        expect(game).to receive(:play_round).once
+        game.play_game
+      end
+
+      it 'calls end_game if board full' do
+        allow(game).to receive(:end_game)
+        allow(game).to receive(:board_full).and_return(true)
+        expect(game).to receive(:end_game).once
+        game.play_game
+      end
+
+      it 'calls end_game if winner is not nil' do
+        allow(game).to receive(:board_full).and_return(false)
+        game.winner = game.instance_variable_get(:@player_one)
+        expect(game).to receive(:end_game).once
+        game.play_game
+      end
+    end
+  end
 end

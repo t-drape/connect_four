@@ -113,16 +113,29 @@ class Game
     player_move
   end
 
-  def play_round
-    puts 'Hello'
-  end
-
   def update_game
     if win_exists
       @winner = @current_player
-      end_game
     else
       @current_player = @current_player == @player_one ? @player_two : @player_one
+      play_round
+    end
+  end
+
+  def play_round
+    move = player_move
+    update_board(move[0], move[1])
+    update_game
+  end
+
+  def board_full
+    false
+  end
+
+  def play_game
+    if board_full || !@winner.nil?
+      end_game
+    else
       play_round
     end
   end
