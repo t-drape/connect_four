@@ -141,12 +141,39 @@ describe Game do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  describe '#available_moves' do
+    context 'when a player selects a move' do
+      subject(:available) { described_class.new }
+
+      it 'returns an array' do
+        expect(available.available_moves).to be_kind_of Array
+      end
+
+      it 'returns the lowest array only when board is empty' do
+        expected_output = [[5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6]]
+        expect(available.available_moves).to eql(expected_output)
+      end
+
+      it 'returns the correct values when lower columns are filled' do
+        available.board = [[nil, nil, nil, nil, nil, nil, nil],
+                           [nil, nil, nil, nil, nil, nil, nil],
+                           [nil, nil, nil, nil, nil, nil, nil],
+                           [nil, nil, nil, nil, nil, nil, nil],
+                           [nil, nil, nil, nil, nil, nil, nil],
+                           ["\u{1F535}", "\u{1F535}", nil, "\u{1F535}", "\u{1F535}", "\u{1F535}", "\u{1F535}"]]
+        expected_output = [[4, 0], [4, 1], [4, 3], [4, 4], [4, 5], [4, 6], [5, 2]]
+
+        expect(available.available_moves).to eql(expected_output)
+      end
+    end
+  end
+
   describe '#player_move' do # rubocop:disable Metrics/BlockLength
     context 'when a round is initiated, asks current_player for move' do # rubocop:disable Metrics/BlockLength
       subject(:moves) { described_class.new }
 
       before do
-        allow(moves).to receive(:gets).and_return('0, 2')
+        allow(moves).to receive(:available_moves)
       end
 
       it 'prompts user to enter move' do
@@ -178,16 +205,11 @@ describe Game do # rubocop:disable Metrics/BlockLength
         expect(moves.player_move).to eql([0, 2])
       end
 
-      it 'disallows invalid moves' do
-        moves.board = [[nil, nil, "\u{1F535}", nil, nil, nil, nil],
-                       [nil, nil, nil, nil, nil, nil, nil],
-                       [nil, nil, nil, nil, nil, nil, nil],
-                       [nil, nil, nil, nil, nil, nil, nil],
-                       [nil, nil, nil, nil, nil, nil, nil],
-                       [nil, nil, nil, nil, nil, nil, nil]]
+      it 'calls available_moves once' do
         allow(moves).to receive(:puts)
-        allow(moves).to receive(:gets).twice.and_return('0, 2', '1, 3')
-        expect(moves.player_move).to eql([1, 3])
+        allow(moves).to receive(:gets).and_return('0, 2')
+        expect(moves).to receive(:available_moves).once
+        moves.player_move
       end
     end
   end

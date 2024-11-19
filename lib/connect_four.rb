@@ -105,12 +105,38 @@ class Game
     @board[horizontal][vertical] = @current_player
   end
 
+  def available_moves
+    moves = []
+    @board.each_with_index do |row, vertical_index|
+      row.each_with_index do |spot, horizontal_index|
+        if spot.nil?
+          if vertical_index == 5
+            moves << [vertical_index, horizontal_index]
+          elsif !@board[vertical_index + 1][horizontal_index].nil?
+            moves << [vertical_index,
+                      horizontal_index]
+          end
+        end
+
+        # if !@board[vertical_index + 1][horizontal_index].nil? && vertical_index < 5
+        #   moves << [vertical_index,
+        #             horizontal_index]
+        # end
+      end
+    end
+    moves
+  end
+
   def player_move
     puts 'Please Select A Move: '
     move = gets.chomp.split(',').map(&:to_i)
-    return move if @board[move[0]][move[1]].nil?
+    moves = available_moves
+    move
+    # return move if moves.include?(move)
 
-    player_move
+    # # return move if @board[move[0]][move[1]].nil?
+
+    # player_move
   end
 
   def update_game
