@@ -117,11 +117,6 @@ class Game
                       horizontal_index]
           end
         end
-
-        # if !@board[vertical_index + 1][horizontal_index].nil? && vertical_index < 5
-        #   moves << [vertical_index,
-        #             horizontal_index]
-        # end
       end
     end
     moves
@@ -131,12 +126,9 @@ class Game
     puts 'Please Select A Move: '
     move = gets.chomp.split(',').map(&:to_i)
     moves = available_moves
-    move
-    # return move if moves.include?(move)
+    return move if moves.include?(move)
 
-    # # return move if @board[move[0]][move[1]].nil?
-
-    # player_move
+    player_move
   end
 
   def update_game

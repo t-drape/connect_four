@@ -173,10 +173,11 @@ describe Game do # rubocop:disable Metrics/BlockLength
       subject(:moves) { described_class.new }
 
       before do
-        allow(moves).to receive(:available_moves)
+        allow(moves).to receive(:available_moves).and_return([[0, 2], [0, 3]])
       end
 
       it 'prompts user to enter move' do
+        allow(moves).to receive(:gets).and_return('0, 2')
         move_message = "Please Select A Move: \n"
         expect { moves.player_move }.to output(move_message).to_stdout
       end
