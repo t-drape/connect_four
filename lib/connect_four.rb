@@ -118,7 +118,7 @@ class Game
       @winner = @current_player
     else
       @current_player = @current_player == @player_one ? @player_two : @player_one
-      play_round
+      # play_round
     end
   end
 
@@ -129,14 +129,16 @@ class Game
   end
 
   def board_full
-    false
+    @board.each do |row|
+      row.each do |el|
+        return false if el.nil?
+      end
+    end
+    true
   end
 
   def play_game
-    if board_full || !@winner.nil?
-      end_game
-    else
-      play_round
-    end
+    play_round until board_full || !@winner.nil?
+    end_game
   end
 end
