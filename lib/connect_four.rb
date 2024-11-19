@@ -118,7 +118,6 @@ class Game
       @winner = @current_player
     else
       @current_player = @current_player == @player_one ? @player_two : @player_one
-      # play_round
     end
   end
 

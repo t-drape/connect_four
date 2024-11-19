@@ -219,17 +219,17 @@ describe Game do # rubocop:disable Metrics/BlockLength
         expect { round_over.update_game }.to change(round_over, :winner).from(nil).to(current_player)
       end
 
-      xit 'calls end_game fucntion when true' do
-        allow(round_over).to receive(:win_exists).and_return(true)
-        allow(round_over).to receive(:puts)
-        expect(round_over).to receive(:end_game).once
-        round_over.update_game
-      end
+      # xit 'calls end_game function when true' do
+      #   allow(round_over).to receive(:win_exists).and_return(true)
+      #   allow(round_over).to receive(:puts)
+      #   expect(round_over).to receive(:end_game).once
+      #   round_over.update_game
+      # end
 
-      xit 'calls play round when false' do
-        expect(round_over).to receive(:play_round).once
-        round_over.update_game
-      end
+      # xit 'calls play round when false' do
+      #   expect(round_over).to receive(:play_round).once
+      #   round_over.update_game
+      # end
     end
   end
 
@@ -305,9 +305,13 @@ describe Game do # rubocop:disable Metrics/BlockLength
   describe '#board_full' do
     context 'when round is over' do
       subject(:full) { described_class.new }
-      it 'returns false if board is full of non-nil values' do
+      it 'returns true if board is full of non-nil values' do
         full.board = [[1, 2, 3], [4, 5, 6]]
         expect(full.board_full).to eql(true)
+      end
+
+      it 'returns false if board contains nil values' do
+        expect(full.board_full).to eql(false)
       end
     end
   end
