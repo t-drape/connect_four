@@ -102,6 +102,7 @@ describe Game do # rubocop:disable Metrics/BlockLength
       subject(:winner) { described_class.new('t', 'j') }
 
       it 'prints an appropriate message to the winner' do
+        allow(winner).to receive(:show_board)
         player = 'x'
         winner_message = "Player #{player} wins!\n"
         winner.winner = 'x'
@@ -109,8 +110,15 @@ describe Game do # rubocop:disable Metrics/BlockLength
       end
 
       it 'prints an appropriate message for a tie' do
+        allow(winner).to receive(:show_board)
         tie_message = "Nobody wins. This game ended in a tie :(\n"
         expect { winner.end_game }.to output(tie_message).to_stdout
+      end
+
+      it 'calls show_board once' do
+        allow(winner).to receive(:puts)
+        expect(winner).to receive(:show_board).once
+        winner.end_game
       end
     end
   end
@@ -241,18 +249,6 @@ describe Game do # rubocop:disable Metrics/BlockLength
         current_player = round_over.instance_variable_get(:@current_player)
         expect { round_over.update_game }.to change(round_over, :winner).from(nil).to(current_player)
       end
-
-      # xit 'calls end_game function when true' do
-      #   allow(round_over).to receive(:win_exists).and_return(true)
-      #   allow(round_over).to receive(:puts)
-      #   expect(round_over).to receive(:end_game).once
-      #   round_over.update_game
-      # end
-
-      # xit 'calls play round when false' do
-      #   expect(round_over).to receive(:play_round).once
-      #   round_over.update_game
-      # end
     end
   end
 

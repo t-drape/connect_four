@@ -94,6 +94,7 @@ class Game
   end
 
   def end_game
+    show_board
     if @winner
       puts "Player #{@winner} wins!"
     else
@@ -146,6 +147,7 @@ class Game
   end
 
   def play_round
+    p !winner.nil?
     show_board
     move = player_move
     update_board(move[0], move[1])
