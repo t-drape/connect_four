@@ -121,7 +121,14 @@ class Game
     end
   end
 
+  def show_board
+    @board.each do |row|
+      p row
+    end
+  end
+
   def play_round
+    show_board
     move = player_move
     update_board(move[0], move[1])
     update_game
