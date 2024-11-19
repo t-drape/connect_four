@@ -64,11 +64,11 @@ class Game
   end
 
   def win_verticals
-    7.times do |spot_index|
-      win = []
-      @winning_combinations_vertical.each do |combo|
+    7.times do |horizontal_index|
+      [[0, 1, 2, 3], [1, 2, 3, 4], [2, 3, 4, 5]].each do |combo|
+        win = []
         combo.each do |vertical_index|
-          win << @board[vertical_index][spot_index]
+          win << @board[vertical_index][horizontal_index]
         end
         return true if win.all?(win[0]) && !win[0].nil?
       end
@@ -147,7 +147,6 @@ class Game
   end
 
   def play_round
-    p !winner.nil?
     show_board
     move = player_move
     update_board(move[0], move[1])

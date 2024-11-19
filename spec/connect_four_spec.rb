@@ -22,19 +22,17 @@ describe Game do # rubocop:disable Metrics/BlockLength
     context 'when a round is over, check if player won on a vertical' do
       subject(:winner_vertical) { described_class.new('t', 'j') }
 
-      before do
-        winner_vertical.board[0] = winner_vertical.board[0][0..3].map { 'x' }
-      end
-
-      it 'returns false with not vertical win' do
+      it 'returns false with no vertical win' do
         expect(winner_vertical.win_verticals).to eql(false)
       end
 
       it 'returns true with vertical win' do
-        winner_vertical.board[0][0] = 'x'
-        winner_vertical.board[1][0] = 'x'
-        winner_vertical.board[2][0] = 'x'
-        winner_vertical.board[3][0] = 'x'
+        winner_vertical.board = [[nil, nil, nil, nil, nil, nil, nil],
+                                 [nil, nil, nil, nil, nil, nil, nil],
+                                 ['x', nil, nil, nil, nil, nil, nil],
+                                 ['x', nil, nil, nil, nil, nil, nil],
+                                 ['x', nil, nil, nil, nil, nil, nil],
+                                 ['x', nil, nil, nil, nil, nil, nil]]
 
         expect(winner_vertical.win_verticals).to eql(true)
       end
